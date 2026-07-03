@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>For Gifty 🌿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest: #16302a;
+    --forest-deep: #0d1f1a;
+    --gold: #e3b45c;
+    --rose: #dd8f92;
+    --sage: #a9c9ab;
+    --cream: #f6efe2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    background: radial-gradient(circle at 15% 0%, #234339 0%, var(--forest) 45%, var(--forest-deep) 100%);
+    font-family:'Inter', sans-serif;
+    color: var(--cream);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  .float-shape{
+    position:fixed;
+    border-radius:50%;
+    opacity:0.28;
+    filter: blur(1px);
+    animation: drift 13s ease-in-out infinite;
+    pointer-events:none;
+    z-index:0;
+  }
+  @keyframes drift{
+    0%,100%{ transform: translateY(0) translateX(0); }
+    50%{ transform: translateY(-26px) translateX(12px); }
+  }
+
+  /* ---------- LOGIN ---------- */
+  #login-screen{
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    z-index:1;
+  }
+  .card{
+    width:100%;
+    max-width:380px;
+    background: rgba(246,239,226,0.06);
+    border:1px solid rgba(227,180,92,0.32);
+    backdrop-filter: blur(10px);
+    border-radius:22px;
+    padding:36px 26px 30px;
+    text-align:center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: rise 0.7s ease both;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(24px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  .leaf-mark{ font-size:26px; margin-bottom:6px; }
+  .eyebrow{
+    font-size:12.5px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color: var(--sage);
+    margin-bottom:8px;
+  }
+  .card h1{
+    font-family:'Dancing Script', cursive;
+    font-size:42px;
+    line-height:1;
+    margin: 0 0 6px;
+    color: var(--gold);
+  }
+  .card p.sub{
+    font-size:14px;
+    color: rgba(246,239,226,0.7);
+    margin:0 0 24px;
+    line-height:1.5;
+  }
+  .field{ text-align:left; margin-bottom:14px; }
+  .field label{
+    display:block;
+    font-size:12px;
+    letter-spacing:0.5px;
+    color: rgba(246,239,226,0.65);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid rgba(227,180,92,0.3);
+    background: rgba(0,0,0,0.2);
+    color: var(--cream);
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    outline:none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:focus{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(227,180,92,0.18);
+  }
+  .field input::placeholder{ color: rgba(246,239,226,0.35); }
+
+  #login-btn{
+    width:100%;
+    margin-top:10px;
+    padding:13px 14px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(135deg, var(--gold), var(--rose));
+    color: var(--forest-deep);
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.3px;
+    cursor:pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #login-btn:active{ transform: scale(0.97); }
+  #login-btn:hover{ box-shadow: 0 10px 24px rgba(227,180,92,0.3); }
+
+  .error-msg{
+    margin-top:14px;
+    font-size:13px;
+    color: var(--rose);
+    min-height:18px;
+  }
+  .shake{ animation: shake 0.4s; }
+  @keyframes shake{
+    10%,90%{ transform: translateX(-2px); }
+    20%,80%{ transform: translateX(4px); }
+    30%,50%,70%{ transform: translateX(-8px); }
+    40%,60%{ transform: translateX(8px); }
+  }
+
+  /* ---------- QUESTION MODAL ---------- */
+  #question-screen{
+    display:none;
+    min-height:100vh;
+    min-height:100dvh;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    z-index:1;
+  }
+  #question-screen.visible{ display:flex; }
+  .q-card{
+    width:100%;
+    max-width:380px;
+    background: rgba(246,239,226,0.06);
+    border:1px solid rgba(227,180,92,0.32);
+    border-radius:22px;
+    padding:38px 26px;
+    text-align:center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: rise 0.6s ease both;
+    position:relative;
+    overflow:hidden;
+  }
+  .q-card h2{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:24px;
+    margin: 4px 0 30px;
+    color: var(--cream);
+  }
+  .q-btn-row{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    height:56px;
+  }
+  .q-btn{
+    padding:12px 28px;
+    border-radius:999px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    border:none;
+    transition: transform 0.15s ease;
+  }
+  #yes-btn{
+    background: linear-gradient(135deg, var(--gold), var(--rose));
+    color: var(--forest-deep);
+  }
+  #yes-btn:active{ transform: scale(0.95); }
+  #no-btn{
+    background: transparent;
+    border:1.5px solid rgba(246,239,226,0.4);
+    color: var(--cream);
+    position:absolute;
+    left:50%;
+    top:0;
+    transform: translateX(30px);
+  }
+  .q-hint{
+    margin-top:20px;
+    font-size:12px;
+    color: rgba(246,239,226,0.45);
+    font-style: italic;
+  }
+
+  /* ---------- REVEAL BUTTON SCREEN ---------- */
+  #reveal-screen{
+    display:none;
+    min-height:100vh;
+    min-height:100dvh;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    z-index:1;
+    text-align:center;
+  }
+  #reveal-screen.visible{ display:flex; flex-direction:column; }
+  #reveal-screen .r-inner{
+    width:100%;
+    max-width:380px;
+    margin:0 auto;
+  }
+  #reveal-screen .leaf-mark{ font-size:30px; }
+  #reveal-screen p.r-text{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:19px;
+    color: var(--cream);
+    line-height:1.6;
+    margin: 10px 0 30px;
+  }
+  #open-btn{
+    padding:15px 30px;
+    border:none;
+    border-radius:999px;
+    background: linear-gradient(135deg, var(--gold), var(--rose));
+    color: var(--forest-deep);
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:15.5px;
+    cursor:pointer;
+    box-shadow: 0 12px 30px rgba(227,180,92,0.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow: 0 12px 30px rgba(227,180,92,0.25); }
+    50%{ box-shadow: 0 12px 40px rgba(221,143,146,0.45); }
+  }
+
+  /* ---------- WISH SCREEN ---------- */
+  #wish-screen{
+    display:none;
+    min-height:100vh;
+    min-height:100dvh;
+    padding: 60px 20px 80px;
+    position:relative;
+    z-index:1;
+    text-align:center;
+  }
+  #wish-screen.visible{ display:block; }
+
+  canvas#confetti-canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:5;
+  }
+
+  .eyebrow-small{
+    font-size:12.5px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color: var(--sage);
+    margin-top:6px;
+  }
+  #wish-screen h1{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size: clamp(30px, 8vw, 48px);
+    margin: 8px 0 2px;
+    color: var(--cream);
+  }
+  #wish-screen h1 span{
+    color: var(--gold);
+    font-family:'Dancing Script', cursive;
+    font-weight:700;
+    display:block;
+    font-size: clamp(42px, 11vw, 66px);
+    line-height:1;
+    margin-top:4px;
+  }
+
+  .letter{
+    max-width:540px;
+    margin: 34px auto 0;
+    background: rgba(246,239,226,0.06);
+    border:1px solid rgba(227,180,92,0.3);
+    border-radius:20px;
+    padding:30px 24px;
+    font-size:16.5px;
+    line-height:1.85;
+    color: rgba(246,239,226,0.94);
+    text-align:left;
+  }
+  .letter p{ margin:0 0 16px; }
+  .letter p:last-child{ margin-bottom:0; }
+  .letter .drop{
+    font-family:'Playfair Display', serif;
+    font-size:20px;
+    font-style:italic;
+    color: var(--gold);
+  }
+  .signoff{
+    font-family:'Dancing Script', cursive;
+    font-size:27px;
+    color: var(--gold);
+    text-align:right;
+    margin-top:20px !important;
+  }
+
+  .divider{
+    width:60px;
+    height:2px;
+    background: var(--gold);
+    opacity:0.5;
+    margin: 34px auto 26px;
+    border-radius:2px;
+  }
+
+  footer.foot{
+    margin-top:44px;
+    font-size:12px;
+    color: rgba(246,239,226,0.4);
+    letter-spacing:0.5px;
+  }
+
+  #next-btn{
+    padding:13px 26px;
+    border:none;
+    border-radius:999px;
+    background: transparent;
+    border:1.5px solid var(--gold);
+    color: var(--gold);
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    cursor:pointer;
+    transition: all 0.2s;
+  }
+  #next-btn:hover{ background: var(--gold); color: var(--forest-deep); }
+
+  /* ---------- NO CAKE SCREEN ---------- */
+  #no-cake-screen{
+    display:none;
+    min-height:100vh;
+    min-height:100dvh;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    z-index:1;
+    text-align:center;
+  }
+  #no-cake-screen.visible{ display:flex; }
+  .nc-inner{
+    width:100%;
+    max-width:400px;
+    background: rgba(246,239,226,0.06);
+    border:1px solid rgba(227,180,92,0.32);
+    border-radius:22px;
+    padding:40px 26px;
+    animation: rise 0.6s ease both;
+  }
+  .nc-inner .leaf-mark{ font-size:34px; margin-bottom:10px; }
+  #no-cake-screen h1{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:700;
+    font-size: clamp(24px, 6.5vw, 32px);
+    color: var(--gold);
+    margin: 0 0 16px;
+  }
+  .nc-text{
+    font-size:16px;
+    line-height:1.7;
+    color: rgba(246,239,226,0.9);
+    margin:0 0 10px;
+  }
+  .nc-sub{
+    font-size:13.5px;
+    color: rgba(246,239,226,0.55);
+    font-style:italic;
+    margin:0;
+  }
+</style>
+</head>
+<body>
+
+<div class="float-shape" style="width:120px;height:120px;background:var(--rose);top:8%;left:-30px;"></div>
+<div class="float-shape" style="width:90px;height:90px;background:var(--sage);bottom:12%;right:-20px;animation-delay:2.5s;"></div>
+<div class="float-shape" style="width:60px;height:60px;background:var(--gold);top:60%;left:72%;animation-delay:5s;"></div>
+
+<!-- ================= LOGIN ================= -->
+<div id="login-screen">
+  <div class="card">
+    <div class="leaf-mark">🌿</div>
+    <div class="eyebrow">Just for you</div>
+    <h1>Hey Big Sis</h1>
+    <p class="sub">Someone's been waiting all day to tell you something. Sign in to find out who.</p>
+
+    <div class="field">
+      <label for="first-name">First name</label>
+      <input id="first-name" type="text" placeholder="First name" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Password" autocomplete="off">
+    </div>
+
+    <button id="login-btn">Continue</button>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+</div>
+
+<!-- ================= QUESTION ================= -->
+<div id="question-screen">
+  <div class="q-card">
+    <div class="eyebrow">One quick thing before we continue</div>
+    <h2>Are you stubborn?</h2>
+    <div class="q-btn-row">
+      <button class="q-btn" id="yes-btn">Yes</button>
+      <button class="q-btn" id="no-btn">No</button>
+    </div>
+    <div class="q-hint" id="q-hint">be honest with yourself, Gifty 😏</div>
+  </div>
+</div>
+
+<!-- ================= REVEAL BUTTON ================= -->
+<div id="reveal-screen">
+  <div class="r-inner">
+    <div class="leaf-mark">🎁</div>
+    <p class="r-text">I knew you'd say yes. That's exactly why this next part is for you.</p>
+    <button id="open-btn">Open your surprise</button>
+  </div>
+</div>
+
+<!-- ================= WISH ================= -->
+<canvas id="confetti-canvas"></canvas>
+<div id="wish-screen">
+  <div class="eyebrow-small">Happy Birthday</div>
+  <h1>To My<span>Big Sis Gifty 🌿</span></h1>
+
+  <div class="letter">
+    <p><span class="drop">G</span>ifty, I don't say this enough, so let me say it properly today: I am so grateful you exist, and even more grateful that I get to call you my sister.</p>
+    <p>You've carried more than people realize — quietly holding things together, showing up for everyone else before you even ask what you need. I see it, even when you think no one is watching. I see how hard you try, how deeply you love, and how much of yourself you give away without expecting anything back.</p>
+    <p>Today, I want you to receive instead of give. Receive the love, the rest, the celebration. You don't have to earn it. You've already earned it a thousand times over, just by being who you are to all of us.</p>
+    <p>Thank you for the times you stood in the gap for me, for the honesty even when it stung, for the stubbornness that has protected our family more times than you know. That "stubbornness" I teased you about earlier? It's really just strength wearing a different name. Don't ever apologize for it.</p>
+    <p>I hope this year hands you everything you've been quietly hoping for — peace that doesn't have to be fought for, joy that doesn't need a reason, and love that meets you exactly where you are. You deserve a soft place to land too, Gifty.</p>
+    <p>Happy birthday, big sis. I love you more than these words can hold.</p>
+    <p class="signoff">— always your sibling</p>
+  </div>
+
+  <div class="divider"></div>
+  <button id="next-btn">Next →</button>
+  <footer class="foot">made with love, just for you 💛</footer>
+</div>
+
+<!-- ================= NO CAKE PAGE ================= -->
+<div id="no-cake-screen">
+  <div class="nc-inner">
+    <div class="leaf-mark">🎂</div>
+    <h1>Sis, no cake for me</h1>
+    <p class="nc-text">I'm serious 😩 I'm watching my weight this month. Just cut me a slice of the love instead, I'll be fine.</p>
+    <p class="nc-sub">(...okay maybe just a small piece 👀)</p>
+  </div>
+</div>
+
+<script>
+  // ---------- LOGIN ----------
+  const firstNameInput = document.getElementById('first-name');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('login-btn');
+  const errorMsg = document.getElementById('error-msg');
+  const loginScreen = document.getElementById('login-screen');
+  const questionScreen = document.getElementById('question-screen');
+  const revealScreen = document.getElementById('reveal-screen');
+  const wishScreen = document.getElementById('wish-screen');
+  const card = document.querySelector('.card');
+
+  const VALID_FIRST = 'gifty';
+  const VALID_PASSWORD = 'mimi';
+
+  function normalize(str){ return str.trim().toLowerCase(); }
+
+  function tryLogin(){
+    const first = normalize(firstNameInput.value);
+    const pass = normalize(passwordInput.value);
+
+    if(first === VALID_FIRST && pass === VALID_PASSWORD){
+      errorMsg.textContent = '';
+      loginScreen.style.display = 'none';
+      questionScreen.classList.add('visible');
+    } else {
+      errorMsg.textContent = "That doesn't quite match. Try again, Gifty.";
+      shakeCard(card);
+    }
+  }
+
+  function shakeCard(el){
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+  }
+
+  loginBtn.addEventListener('click', tryLogin);
+  [firstNameInput, passwordInput].forEach(el=>{
+    el.addEventListener('keydown', e=>{ if(e.key === 'Enter') tryLogin(); });
+  });
+
+  // ---------- QUESTION: dodging "No" ----------
+  const noBtn = document.getElementById('no-btn');
+  const yesBtn = document.getElementById('yes-btn');
+  const btnRow = document.querySelector('.q-btn-row');
+  const qHint = document.getElementById('q-hint');
+  let dodgeCount = 0;
+
+  const teaseLines = [
+    "be honest with yourself, Gifty 😏",
+    "nice try 😌",
+    "the button doesn't believe you either",
+    "come on, we both know the answer",
+    "just say yes, it's easier 😂",
+    "your fingers are stubborn too, huh?"
+  ];
+
+  function dodgeNo(){
+    const rowRect = btnRow.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+    const maxX = rowRect.width - btnRect.width - 4;
+    const maxY = rowRect.height - btnRect.height - 4;
+    const randX = Math.max(0, Math.random() * maxX);
+    const randY = Math.max(0, Math.random() * maxY);
+    noBtn.style.left = randX + 'px';
+    noBtn.style.top = randY + 'px';
+    noBtn.style.transform = 'translateX(0)';
+    dodgeCount++;
+    qHint.textContent = teaseLines[Math.min(dodgeCount, teaseLines.length - 1)];
+  }
+
+  // dodge on hover (desktop) and on touch attempt (mobile), before a click can land
+  noBtn.addEventListener('mouseenter', dodgeNo);
+  noBtn.addEventListener('touchstart', function(e){ e.preventDefault(); dodgeNo(); }, {passive:false});
+  noBtn.addEventListener('click', function(e){ e.preventDefault(); dodgeNo(); });
+  noBtn.addEventListener('focus', dodgeNo);
+
+  yesBtn.addEventListener('click', ()=>{
+    questionScreen.classList.remove('visible');
+    revealScreen.classList.add('visible');
+  });
+
+  // ---------- REVEAL BUTTON ----------
+  const openBtn = document.getElementById('open-btn');
+  openBtn.addEventListener('click', ()=>{
+    revealScreen.classList.remove('visible');
+    wishScreen.classList.add('visible');
+    launchConfetti();
+    window.scrollTo(0,0);
+  });
+
+  // ---------- NEXT: no cake page ----------
+  const nextBtn = document.getElementById('next-btn');
+  const noCakeScreen = document.getElementById('no-cake-screen');
+  nextBtn.addEventListener('click', ()=>{
+    wishScreen.classList.remove('visible');
+    noCakeScreen.classList.add('visible');
+    window.scrollTo(0,0);
+  });
+
+  // ---------- CONFETTI ----------
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  let confettiPieces = [];
+  const colors = ['#e3b45c', '#dd8f92', '#a9c9ab', '#f6efe2', '#7fb3a3'];
+
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function launchConfetti(){
+    confettiPieces = [];
+    for(let i=0; i<110; i++){
+      confettiPieces.push({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * canvas.height,
+        size: 5 + Math.random() * 6,
+        speedY: 2 + Math.random() * 3,
+        speedX: (Math.random() - 0.5) * 2,
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 8,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+    let elapsed = 0;
+    function animate(){
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      let stillActive = false;
+      confettiPieces.forEach(p=>{
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotationSpeed;
+        if(p.y < canvas.height + 20) stillActive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI/180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+        ctx.restore();
+      });
+      elapsed++;
+      if(stillActive && elapsed < 420){
+        requestAnimationFrame(animate);
+      } else {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+      }
+    }
+    animate();
+  }
+</script>
+
+</body>
+</html>
